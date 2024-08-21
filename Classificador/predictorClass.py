@@ -66,7 +66,7 @@ class YOLOPredictor:
             
             class_names={0:'Hematoma',1:'Ruptura',2:'Penugem',3:'Fratura',4:'Calo de Pata',5:'Falha Técnica',6:'Arranhadura',7:'Artrite'}
         '''
-        class_names={0:'Hematoma',1:'Calo de Pata',2:'Fratura',3:'Artrite'}
+        class_names={0:'hematoma',1:'calo_de_pata',2:'fratura',3:'artrite'}
         # Initialize list to store results
         all_results = []
         found_labels=[]
@@ -83,11 +83,11 @@ class YOLOPredictor:
             else:
                 class_name = "Unknown"
             if class_names[class_id]=='contaminacaofecal' or class_names[class_id]=='CF':
-                name='Contaminacao Fecal'
+                name='contaminacao_fecal'
             elif class_names[class_id]=='contaminacaogastrica' or class_names[class_id]=='CG':
-                name='Contaminacao Gastrica'
+                name='contaminacao_gastrica'
             elif class_names[class_id]=='contaminacaobiliar' or class_names[class_id]=='CB':
-                name='Contaminacao Biliar'
+                name='contaminacao_biliar'
             else:
                 name=class_names[class_id]
             if name in found_labels:

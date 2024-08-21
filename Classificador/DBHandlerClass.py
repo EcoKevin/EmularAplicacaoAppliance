@@ -79,11 +79,11 @@ class DBHandler:
             else:
                 #There are no defects on the list
                 #If there is already a healthy registry entry, increment it 
-                if 'Saudavel' in data_json.keys():
-                    data_json['Saudavel']+=1
+                if 'saudavel' in data_json.keys():
+                    data_json['saudavel']+=1
                 #If not, insert it
                 else:
-                    data_json['Saudavel']=1
+                    data_json['saudavel']=1
                 return json.dumps(data_json)
         #If no json, then we must create it 
         else:
@@ -92,7 +92,7 @@ class DBHandler:
                 for defects in lista_defeitos:
                         data_json[defects]=1
             else:
-                data_json['Saudavel']=1
+                data_json['saudavel']=1
         return json.dumps(data_json)
     def select_for_update(self, key_value,lista_defeitos):
         
