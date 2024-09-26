@@ -110,5 +110,5 @@ class GPIOReader:
                       self.DI_Temp[gpio].start_timer()
                     #self.DI_Temp[gpio].start_timer()
                     '''
-                    #print(f"Falling edge detected on DI channel {gpio - 300}. Current count: {self.falling_edge_counts[gpio]}")
+                    print(f"Falling edge detected on DI channel {gpio - 300}. Current count: {self.falling_edge_counts[gpio]}")
                 self.previous_values[gpio] = current_value

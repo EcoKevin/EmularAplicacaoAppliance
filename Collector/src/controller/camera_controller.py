@@ -28,7 +28,8 @@ class CameraController:
         self.EXPOSURE_FACTOR = 2
         self.image_name = None
         self.image_path = None
-
+        self.photo_taken_flag=1
+        self.status=0
 
         # Initialize camera and converter
         self.camera, self.converter = self.initialize_camera()
@@ -149,6 +150,8 @@ class CameraController:
             ## Counts number of falling edges
             DIReader.detect_falling_edges()
             
+            if not DIReader.gpio_get_value(302) and not self.status:
+              self.photo_taken_flag=1
     def save_images_from_queue(self):
         """Continuously save images from the FIFO queue."""
         
@@ -175,14 +178,15 @@ class CameraController:
                 continue  # If the queue is empty, keep checking
                 
         
-    def snapshot_check(self,DIReader,grab_result,photo_taken_flag):
+    def snapshot_check(self,DIReader,grab_result):
           capture_snapshot=False
           img_adjusted=None
+          self.status=1
           #Checks first DI status 
           if not DIReader.gpio_get_value(300):
                # If True, then check the second one
-               if not DIReader.gpio_get_value(301) and photo_taken_flag:
-               
+               if not DIReader.gpio_get_value(301) and self.photo_taken_flag:
+                 self.photo_taken_flag=0
                  init=time.time()
                  capture_snapshot = True # Sets photo_taken_flag to True so that this image is added to FIFO
                  #Gets image from camera
@@ -210,8 +214,8 @@ class CameraController:
                  logging.warning(f'Total images captured: {self.count_photos}')
                  
                  #Flag to prevent taking multiple instances of the same photo
-                 photo_taken_flag=0
-           
+                 
+          ''' 
           else:
                
                logging.debug('Skipped capturing image')
@@ -221,8 +225,12 @@ class CameraController:
                # Resets flag so different photo can be taken
                photo_taken_flag=1
                
-               
-          return capture_snapshot,img_adjusted,photo_taken_flag
+          '''
+          
+          #if  DIReader.gpio_get_value(302):
+            #photo_taken_flag=0 
+          self.status=0
+          return capture_snapshot,img_adjusted
 
     def capture_images(self):
         ## Main loop
@@ -291,14 +299,13 @@ class CameraController:
                   
                 DI0,DI1,a,b=self.DIReader.get_edge_count()  
 
-                logging.debug(f'Sensors: DI0={DI0}, DI1={DI1}, old values : {DI0_old},{DI1_old}')
-                
+                logging.debug(f'Sensors: DI0={DI0}, DI1={DI1} DI2={a}, old values : {DI0_old},{DI1_old}')
 
-            
+                
                 
                 
                 ## Returns if capture conditions were met and the img captured
-                capture_snapshot,img_adjusted,photo_taken_flag=self.snapshot_check(self.DIReader,grab_result,photo_taken_flag)
+                capture_snapshot,img_adjusted=self.snapshot_check(self.DIReader,grab_result)
                 # ----------------------------
                 
                 
